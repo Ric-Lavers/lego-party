@@ -1,0 +1,16 @@
+:root {
+  --sm: 8px;
+  --md: 16px;
+  --lg: 32px;
+
+  --green: #d5ffd1;
+  --pink: #ffade6;
+  --light-pink: #fef;
+  --grey: #707070;
+  --light-grey: #d3d3d3;
+  --white: #fff;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}

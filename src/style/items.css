@@ -1,0 +1,152 @@
+* {
+  box-sizing: border-box;
+}
+button {
+  cursor: pointer;
+  outline: none;
+}
+button:focus {
+  border: 4px solid blue;
+}
+ul {
+  list-style-type: none;
+  padding-inline-start: 0;
+}
+body {
+  display: flex;
+  justify-content: center;
+}
+.list {
+  text-align: left;
+  border: 1px solid lime;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* grid-gap: 16px; */
+  max-width: 800px;
+  justify-content: centre;
+  max-width: 600px;
+}
+
+.item {
+  height: 100%;
+  position: relative;
+  background: var(--white);
+  padding: 32px;
+  min-height: 260px;
+}
+.item:focus {
+  border: 3px solid pink;
+}
+
+.item-bg {
+  animation: bg-shift-out 200ms ease-out;
+}
+/* .item-bg:focus-within, */
+/* .selected {
+  background: var(--green);
+  animation: bg-shift-in 200ms ease-in;
+}
+@keyframes bg-shift-in {
+  from {
+    padding: 0px;
+    background-color: var(--white);
+  }
+  to {
+    padding: 16px;
+    background-color: var(--green);
+  }
+} 
+
+@keyframes bg-shift-out {
+  to {
+    padding: 0px;
+    background-color: var(--white);
+  }
+  from {
+    padding: 16px;
+    background-color: var(--green);
+  }
+}*/
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:focus,
+.item.selected {
+  padding: 12px;
+}
+
+.item img {
+  width: 100%;
+  z-index: 2;
+  margin-bottom: var(--lg);
+}
+
+.item p,
+.item h3 {
+  margin: 0;
+  font-size: 5vw;
+}
+@media screen and (min-width: 600px) {
+  .item p,
+  .item h3 {
+    font-size: var(--lg);
+  }
+}
+
+.item .total {
+  position: absolute;
+  top: var(--sm);
+  right: var(--sm);
+}
+
+.item button {
+  position: absolute;
+  border-radius: 50%;
+  /* inactive */
+  padding: var(--sm);
+  font-size: var(--lg);
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item button.inactive {
+  background: var(--gray);
+}
+.item button.active {
+  padding: var(--md);
+  font-size: var(--lg);
+  z-index: 3;
+  width: 70px;
+  height: 70px;
+}
+
+.up-btn {
+  background: var(--green);
+  top: var(--sm);
+  left: var(--sm);
+}
+
+.down-btn {
+  background: var(--pink);
+  position: absolute;
+  bottom: var(--sm);
+  right: var(--sm);
+}
+.down--btn.active {
+}
+
+.selected .down--btn {
+  width: 70px;
+  height: 70px;
+}
+
+.invisible {
+  opacity: 0;
+  position: absolute;
+}
