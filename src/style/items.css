@@ -12,13 +12,9 @@ ul {
   list-style-type: none;
   padding-inline-start: 0;
 }
-body {
-  display: flex;
-  justify-content: center;
-}
+
 .list {
   text-align: left;
-  border: 1px solid lime;
   display: grid;
   grid-template-columns: 1fr 1fr;
   /* grid-gap: 16px; */

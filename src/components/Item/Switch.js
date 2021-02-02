@@ -33,16 +33,6 @@ const ItemSwitch = () => {
       </div>
     </div>
   );
-  return (
-    <ItemProvider>
-      <div classNameName="make styled components">
-        <Dissd />
-        <High />
-        <Untouched />
-        <Upd />
-      </div>
-    </ItemProvider>
-  );
 };
 
 export default ItemSwitch;

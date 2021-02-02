@@ -13,4 +13,22 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  justify-content: center;
+  display: flex;
+}
+
+.App,
+section,
+header {
+  position: relative;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+}
+.vote-info {
+  z-index: 5;
+  background-color: var(--white);
+  padding-bottom: var(--sm);
 }

@@ -1,11 +1,12 @@
 import React from "react";
 
 import { sortByBudget } from "../utils/sort-with-budget";
+import { BUDGET } from "../constants";
 
 const ItemList = () => {
   return (
     <ul className="list">
-      {sortByBudget(_items, 420).items.map((item, i) => {
+      {sortByBudget(_items, BUDGET).items.map((item, i) => {
         let total =
           typeof item.score.total === "function"
             ? item.score.total()

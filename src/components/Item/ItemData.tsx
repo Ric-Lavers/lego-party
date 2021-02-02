@@ -1,60 +1,30 @@
-//@ts-nocheck
 import React from "react";
 import { useSetState } from "react-use";
-
-// Utilities
-function score({ upd = [], dissd = [] }): Score {
-  function total(): number {
-    //@ts-ignore
-    return this.upd.length - this.dissd.length;
-  }
-
-  return {
-    total,
-    upd,
-    dissd,
-  };
-}
+import { getUserId } from "../../hooks/useUserData";
+import { IScore } from "../../types";
 
 //types
-interface Score {
-  total: () => number;
-  upd: string[];
-  dissd: string[];
-}
 export interface ItemState {
-  up: Function;
-  down: Function;
-
-  selected: boolean;
   price: number;
   title: string;
-  score: Score;
+  score: IScore;
   selected?: boolean;
 }
-type UseItemData = (intialState?: Partial<ItemState>) => ItemState;
+type UseItemData = (intialState?: Partial<IScore>) => any;
 
 // hooks
-const useItemState: UseItemData = (intialState = {}) => {
-  const [state, setState] = useSetState({
-    up: () => {},
-    down: () => {},
-    selected: false,
-    price: 10,
-    title: "Starting state",
-    // score: score( ["string"],["string"]),
-    score: {
-      upd: [],
-      dissd: [],
-      ...intialState.score,
-    },
-    ...intialState,
-  });
+const useItemScore: UseItemData = (
+  initialScore = {
+    upd: [],
+    dissd: [],
+  }
+) => {
+  const userId = getUserId();
+  const [state, setState] = useSetState(initialScore);
 
-  const total = () => state.score.upd.length - state.score.dissd.length;
   const up = (e) => {
     e.preventDefault();
-    let idx = state.score.dissd.indexOf("aeon");
+    let idx = state.score.dissd.indexOf(userId);
     if (idx !== -1) {
       state.score.dissd.splice(idx, 1);
       return setState({
@@ -67,13 +37,14 @@ const useItemState: UseItemData = (intialState = {}) => {
     setState({
       score: {
         ...state.score,
-        upd: [...state.score.upd, "aeon"],
+        upd: [...state.score.upd, userId],
       },
     });
   };
+
   const down = (e) => {
     e.preventDefault();
-    let idx = state.score.upd.indexOf("aeon");
+    let idx = state.score.upd.indexOf(userId);
     if (idx !== -1) {
       state.score.upd.splice(idx, 1);
       return setState({
@@ -86,27 +57,12 @@ const useItemState: UseItemData = (intialState = {}) => {
     setState({
       score: {
         ...state.score,
-        dissd: [...state.score.dissd, "aeon"],
+        dissd: [...state.score.dissd, userId],
       },
     });
-    // setState((prev) => {
-    //   let idx = prev.score.upd.indexOf("aeon");
-    //   if (idx !== -1) prev.upd.dissd.splice(idx, 1);
-    //   console.log(idx);
-
-    //   return {
-    //     score: {
-    //       ...state.score,
-    //     upd: [...state.score.upd, "aeon"],
-    //     },
-    //   };
-    // });
   };
 
-  state.up = up;
-  state.down = down;
-  state.score.total = total;
-  return [state, setState];
+  return [{ ...state, up, down }, setState];
 };
 
 //context

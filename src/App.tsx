@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
+import isEqual from "lodash.isequal";
+import { useSetState } from "react-use";
 import Item from "./components/Item/Item";
-import { ItemProvider } from "./components/Item/ItemData";
-import { ItemState } from "./components/Item/ItemData";
+// import { ItemProvider } from "./components/Item/ItemData";
+// import { ItemState } from "./components/Item/ItemData";
+import UserForm from "./components/UserForm/UserForm";
 import { sortByBudget } from "./utils/sort-with-budget";
-import mockItems from "./data/mock/items";
+import { getAllItems, updateItemScore } from "./services/budgetItems";
+import { IItem, IScore, Dir } from "./types";
+import useUserData, { getUserId } from "./hooks/useUserData";
+
 // import "./App.css";
 
 interface UserState {
@@ -14,88 +20,124 @@ interface PartyState {
   remaining: 420;
 }
 
-const UserContext = React.createContext({
-  votes: 5,
-  diss: 3,
-});
-export const useUserContext = () => React.useContext(UserContext);
-export const UserContextProvider: React.FC = ({ children }) => {
-  const value = React.useState({
-    votes: 5,
-    diss: 3,
+interface ItemData {
+  items: IItem[];
+  loading: boolean;
+  error: boolean;
+}
+interface IuseitemData extends ItemData {
+  updateItemScores: (id: Pick<IItem, "_id">, score: IScore) => any;
+  updateScoreByOne: any;
+}
+const useItemData = (): IuseitemData => {
+  const [{ items, loading, error }, setItems] = useSetState<ItemData>({
+    items: [],
+    loading: true,
+    error: false,
   });
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  useEffect(() => {
+    const fetchAllItems = async () => {
+      try {
+        const data = await getAllItems();
+        setItems({ items: data, loading: false });
+      } catch (error) {
+        setItems({ error, loading: false });
+      }
+    };
+    fetchAllItems();
+  }, []);
+
+  const updateItemScores = async (id: Pick<IItem, "_id">, score: IScore) => {
+    const item = items.find(
+      (itm) => ((itm._id as unknown) as Pick<IItem, "_id">) === id
+    ) as IItem;
+    if (isEqual(item.score, score)) return Promise.resolve();
+    console.log("updating scores", id, score);
+    try {
+      await updateItemScore(id, score);
+      setItems((prev) => {
+        const item = prev?.items.find(
+          (itm) => ((itm._id as unknown) as Pick<IItem, "_id">) === id
+        ) as IItem;
+        item.score = score;
+        return { ...prev };
+      });
+    } catch (error) {
+      console.log("didn't update");
+    }
+  };
+
+  const updateScoreByOne = (
+    id: Pick<IItem, "_id">,
+    type: Dir,
+    direction: 1 | -1
+  ) => {
+    setItems((prev) => {
+      const item = prev?.items.find(
+        (itm) => ((itm._id as unknown) as Pick<IItem, "_id">) === id
+      ) as IItem;
+      //@ts-ignore
+      item.score[type] = item.score[type] + 1 * direction;
+      return { ...prev };
+    });
+  };
+
+  return { items, loading, error, updateItemScores, updateScoreByOne };
 };
 
 function App() {
-  const [_items, setItems] = React.useState(mockItems);
+  const {
+    items: itemsList,
+    loading,
+    error,
+    updateItemScores,
+    // updateScoreByOne,
+  } = useItemData();
+  const {
+    loading: userLoading,
+    createUser,
+    userId,
+    user,
+    updateScoreByOne,
+  } = useUserData(itemsList);
 
-  const AeonVotes = _items.reduce(
-    (a, c) => {
-      const upd = c.score.upd.filter((user) => user === "aeon").length;
-      const dissd = c.score.dissd.filter((user) => user === "aeon").length;
-      a.votes = a.votes + upd;
-      a.diss = a.diss + dissd;
-      return a;
-    },
-    {
-      votes: 0,
-      diss: 0,
-    }
-  );
+  const { items, budget } = sortByBudget(itemsList, 420);
 
-  const updateItem = (item: ItemState, total: number) => {
-    let inx = _items.findIndex(({ id }) => id === item.id);
-    let itm = _items[inx];
-    itm = {
-      ...item,
-      score: {
-        ...item.score,
-        total: () => total,
-      },
-    };
+  if (loading || userLoading) return <p>loading...</p>;
+  if (error) return <p>error</p>;
+  console.log(user.votes);
 
-    _items[inx] = itm;
-    setItems([..._items]);
-    // ?.score.total = total;
-  };
-
-  const { items, budget } = sortByBudget(_items, 420);
   return (
     <div className="App">
+      <UserForm loading={userLoading} user={user} createUser={createUser} />
       <h3>The Party has </h3>
       <h1>$420 to spend.</h1>
+      <section>
+        {userId && (
+          <div className="vote-info sticky">
+            <h3>You have</h3>
+            <h2>{5 - user.votes.upd} votes remaining</h2>
+            <h2>{3 - user.votes.dissd} diss' remaining</h2>
+          </div>
+        )}
 
-      <header className="App-header">
         <ul className="list">
           {items.map((item, i) => {
-            let total =
-              typeof item.score.total === "function"
-                ? item.score.total()
-                : item.score.total();
-
             return (
-              <ItemProvider key={`${item.id}-${total}`} initialState={item}>
-                <>
-                  <Item
-                    votes={AeonVotes}
-                    top={item?.selected}
-                    // bottom={i > _items.length - 3}
-                    updateItem={updateItem}
-                    intialState={item}
-                  />
-                </>
-              </ItemProvider>
+              <Item
+                updateItemScores={updateItemScores}
+                {...item}
+                userVotes={user.votes}
+                updateScoreByOne={updateScoreByOne}
+                userId={userId}
+              />
             );
           })}
         </ul>
-        <h3>The Party has </h3>
-        <h1>${budget} remaining.</h1>
-        <h3>you have</h3>
-        <h2>{5 - AeonVotes.votes} votes remaining</h2>
-        <h2>{3 - AeonVotes.diss} diss' remaining</h2>
-      </header>
+      </section>
+      <h3>The Party has </h3>
+      <h1>${budget} remaining.</h1>
     </div>
   );
 }

@@ -1,45 +1,100 @@
 import React from "react";
-import { useItemContext } from "./ItemData";
+import { Dir } from "../../hooks/useUserData";
+import { IItem, IUserVotes } from "../../types";
 
-const Item: React.FC = ({
-  votes: { votes, diss },
-  top,
-  bottom,
-  intialState = {},
-  updateItem,
+interface ItemProps extends IItem {
+  userId: string | undefined;
+  selected: boolean;
+  updateScoreByOne: any;
+  userVotes: IUserVotes;
+}
+const Item: React.FC<ItemProps> = ({
+  updateItemScores,
+  score: _score,
+  price,
+  title,
+  selected,
+  _id,
+  userId,
+  votes,
+  diss,
+  updateScoreByOne,
+  userVotes: usersScores,
 }: any) => {
+  const [score, setScore] = React.useState(_score);
   // const [itemBGClass, setItemClass] = React.useState("item-bg");
-  const [item] = useItemContext(intialState);
-  const { id, down, up, score, price, title } = item;
-  const usersScores = {
-    upd: score.upd.filter((str) => str === "aeon").length,
-    dissd: score.dissd.filter((str) => str === "aeon").length,
-  };
+  // const [item] = useItemContext(intialState);
 
-  const isUpdActive = usersScores.upd > 0;
-  const isDownActive = usersScores.dissd > 0;
-  React.useEffect(() => {
-    !!updateItem && updateItem(item, score.total());
-  }, [score.total(), id]);
+  // const { id, down, up, score, price, title } = item;
+  // const usersScores = React.useMemo(
+  //   () => ({
+  //     upd: score.upd.reduce((a, str) => (str === userId ? ++a : a), 0),
+  //     dissd: score.dissd.reduce((a, str) => (str === userId ? ++a : a), 0),
+  //   }),
+  //   [score, userId]
+  // );
+
+  const isUpdActive = usersScores.votes > 0;
+  const isDownActive = usersScores.diss > 0;
+  // console.log(score);
+  // console.log(usersScores);
 
   // const handlePointerEnter = () => setItemClass("item-bg selected");
   // const handlePointerLeave = () => setItemClass("item-bg");
 
   const handleUpClick = (e) => {
-    (votes < 5 || isDownActive) && up(e);
+    updateScoreByOne(_id, Dir.UP, 1);
+    return;
+    if (usersScores.votes < 5 || isDownActive) {
+      setScore((prev) => {
+        if (isDownActive) {
+          const index = prev.dissd.indexOf(userId);
+          const copy = [...prev.dissd];
+          copy.splice(index, 1);
+
+          updateScoreByOne(_id, Dir.DOWN, -1);
+          return { ...prev, dissd: copy };
+        }
+        updateScoreByOne(_id, Dir.UP, 1);
+        return { ...prev, upd: [...prev.upd, userId] };
+      });
+    }
+  };
+
+  const handleDownClick = (e) => {
+    updateScoreByOne(_id, Dir.DOWN, -1);
+    return;
+    if (usersScores.diss < 3 || isUpdActive) {
+      setScore((prev) => {
+        if (isUpdActive) {
+          const index = prev.upd.indexOf(userId);
+          const copy = [...prev.upd];
+          copy.splice(index, 1);
+
+          updateScoreByOne(_id, Dir.UP, -1);
+          return { ...prev, upd: copy };
+        }
+
+        updateScoreByOne(_id, Dir.DOWN, 1);
+        return { ...prev, dissd: [...prev.dissd, userId] };
+      });
+    }
+  };
+  const handleBlur = (t) => {
+    updateItemScores(_id, score);
   };
 
   return (
     <div className="item-bg">
-      <a onClick={(e) => e.preventDefault()} href="#">
+      <a
+        onBlur={() => handleBlur(title)}
+        onClick={(e) => e.preventDefault()}
+        href="#"
+      >
         <li
           className="item"
           style={{
-            backgroundColor: top
-              ? "var(--light-grey)"
-              : bottom
-              ? "var(--pink)"
-              : "inherit",
+            backgroundColor: selected ? "var(--light-grey)" : "inherit",
           }}
         >
           <button
@@ -47,21 +102,21 @@ const Item: React.FC = ({
             data-amount="2"
             className={`up-btn ${isUpdActive && "active"}`}
           >
-            {(isUpdActive ? usersScores.upd : "") + "+"}
+            {(isUpdActive ? usersScores.votes.toString() : "") + "+"}
           </button>
           <span data-total="6" className="total">
-            {score.total()}
+            {score.total}
           </span>
 
-          <img src={`https://picsum.photos/id/${id * 3}/300/200`} alt="cat" />
+          <img src={`https://picsum.photos/id/${35}/300/200`} alt="cat" />
           <h3>{title}</h3>
           <p>${price}</p>
           <button
             className={`down-btn ${isDownActive && "active"}`}
-            onClick={(e) => (diss < 3 || isUpdActive) && down(e)}
+            onClick={handleDownClick}
             data-amount="0"
           >
-            {usersScores.dissd > 0 ? `-${usersScores.dissd}` : "-"}
+            {usersScores.diss > 0 ? `-${usersScores.diss}` : "-"}
           </button>
         </li>
       </a>
