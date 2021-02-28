@@ -100,9 +100,11 @@ function App() {
     user,
     updateScoreByOne,
   } = useUserData(itemsList);
+  console.log(itemsList);
 
   const { items, budget } = sortByBudget(itemsList, 420);
 
+  console.log({ items });
   if (loading || userLoading) return <p>loading...</p>;
   if (error) return <p>error</p>;
 

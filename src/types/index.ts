@@ -11,6 +11,9 @@ export interface IItem {
   created_on: Date;
   _id: string;
   selected?: boolean;
+  img: {
+    src: string;
+  };
 }
 export interface IVotesItems {
   _id: string;

@@ -26,7 +26,7 @@ export var items = [
   },
   {
     id: "3",
-    title: "lego",
+    title: "lego - 1985 Audi Sport quattro S1",
     price: 200,
     score: {
       total,

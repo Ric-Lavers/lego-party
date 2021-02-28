@@ -16,6 +16,7 @@ const Item: React.FC<ItemProps> = ({
   score: _score,
   price,
   title,
+  img,
   selected,
   _id,
   userId,
@@ -23,6 +24,7 @@ const Item: React.FC<ItemProps> = ({
   diss,
   updateScoreByOne,
   userVotes: usersScores,
+  ...rest
 }: any) => {
   const [score, setScore] = React.useState(_score);
   // const [itemBGClass, setItemClass] = React.useState("item-bg");
@@ -110,7 +112,10 @@ const Item: React.FC<ItemProps> = ({
           {score.total}
         </span>
 
-        <img src={`https://picsum.photos/id/${35}/300/200`} alt="cat" />
+        <img
+          src={img?.src || `https://picsum.photos/id/${35}/300/200`}
+          alt="cat"
+        />
         <div className="details">
           <h3>{title}</h3>
           <p>${price}</p>
