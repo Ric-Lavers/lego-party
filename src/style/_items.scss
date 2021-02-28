@@ -1,0 +1,183 @@
+* {
+  box-sizing: border-box;
+}
+button {
+  cursor: pointer;
+  outline: none;
+  border: 0px;
+}
+
+ul {
+  list-style-type: none;
+  padding-inline-start: 0;
+}
+
+.list {
+  text-align: left;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 16px;
+  max-width: 800px;
+  justify-content: centre;
+  max-width: 600px;
+  .item-container {
+    margin-bottom: 24px;
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.item {
+  height: 100%;
+  position: relative;
+  padding: 32px;
+  min-height: 260px;
+  margin-bottom: 32px;
+
+  background: var(--white);
+
+  border-radius: 24px;
+  @include neuro;
+
+  .total {
+    position: absolute;
+    top: var(--sm);
+    right: var(--sm);
+  }
+  .rank {
+    // display: none;
+    position: absolute;
+    top: var(--sm);
+    left: 64px;
+  }
+
+  img {
+    width: 100%;
+    // z-index: 2;
+    margin-bottom: var(--lg);
+  }
+
+  p,
+  h3 {
+    margin: 0;
+    font-size: 5vw;
+  }
+  h3 {
+    opacity: 0.8;
+  }
+  p {
+    opacity: 0.6;
+  }
+
+  button {
+    user-select: none;
+    position: absolute;
+    border-radius: 50%;
+    /* inactive */
+    padding: var(--sm);
+    font-size: var(--lg);
+    z-index: 1;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      z-index: 2;
+    }
+
+    @include neuroRound;
+    background: linear-gradient(145deg, #f0f0f0, #cacaca);
+    box-shadow: 5px 5px 9px #5a5a5a, -5px -5px 9px #ffffff;
+    &:active {
+      box-shadow: inset 5px 5px 9px #5a5a5a, inset -5px -5px 9px #ffffff;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      right: 6px;
+      bottom: 6px;
+      border-radius: 50%;
+      opacity: 0.5;
+      z-index: 1;
+    }
+
+    &.up-btn {
+      // background: var(--green);
+      top: var(--sm);
+      left: var(--sm);
+
+      &::after {
+        background-color: var(--green);
+      }
+    }
+
+    &.down-btn {
+      // background: var(--pink);
+      position: absolute;
+      bottom: var(--sm);
+      right: var(--sm);
+      &::after {
+        background-color: var(--pink);
+      }
+      span {
+        padding: 0px 0 2px 0;
+      }
+    }
+  }
+  .details {
+    padding: 4px;
+    border-radius: 4px;
+    box-shadow: 5px 5px 9px #5a5a5a, -5px -5px 9px #ffffff;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .list {
+    grid-template-columns: 1fr;
+    .item {
+      .rank {
+        display: block;
+        left: calc(32px + 64px);
+      }
+      button {
+        width: 80px;
+        height: 80px;
+
+        box-shadow: 8px 8px 16px #5a5a5a, -8px -8px 16px #ffffff;
+        &:active {
+          box-shadow: inset 8px 8px 16px #5a5a5a, inset -8px -8px 16px #ffffff;
+        }
+        &.down-btn {
+          box-shadow: 8px 8px 16px #5a5a5a, -2px -2px 16px #ffffff;
+          &:active {
+            box-shadow: inset 4px 6px 16px #5a5a5a, inset -8px -8px 16px #ffffff;
+          }
+          /* ,
+            -4px -4px 4px #ffffff; */
+        }
+      }
+    }
+  }
+}
+@media screen and (min-width: 600px) {
+  .item p,
+  .item h3 {
+    font-size: var(--lg);
+  }
+}
+
+.down--btn.active {
+}
+
+.selected .down--btn {
+  width: 64px;
+  height: 64px;
+}
+
+.invisible {
+  opacity: 0;
+  position: absolute;
+}

@@ -1,0 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;700&display=swap");
+@import "_globals", "_items", "form";
+
+body {
+  font-family: Poppins, Arial, Helvetica, sans-serif;
+  justify-content: center;
+  display: flex;
+  background: var(--white);
+}
+input,
+textarea,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.App,
+section,
+header {
+  position: relative;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+}
+.vote-info {
+  z-index: 5;
+  background-color: var(--white);
+  padding-bottom: var(--sm);
+}

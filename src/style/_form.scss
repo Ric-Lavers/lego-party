@@ -1,0 +1,27 @@
+.rsvp-form {
+  input {
+    outline: none;
+    //neuro
+    border: 0px;
+    padding: 12px 10px;
+    border-radius: 8px;
+    background: var(--white);
+  }
+
+  input[type="text"] {
+    font-size: large;
+    //neuro
+    box-shadow: inset 5px 5px 11px #5a5a5a, inset -5px -5px 11px #ffffff;
+  }
+
+  input[type="submit"] {
+    margin-top: 16px;
+    cursor: pointer;
+    //neuro
+    box-shadow: 5px 5px 11px #5a5a5a, -5px -5px 11px #ffffff;
+
+    &:active {
+      box-shadow: inset 5px 5px 11px #5a5a5a, inset -5px -5px 11px #ffffff;
+    }
+  }
+}

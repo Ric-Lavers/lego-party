@@ -58,11 +58,10 @@ const UserForm: FC<Pick<IUseUserData, "loading" | "user" | "createUser">> = ({
 
   return (
     <div id="rsvp-form-container">
-      <form onSubmit={handleSubmit} id="rsvp-form">
+      <form className="rsvp-form" onSubmit={handleSubmit} id="rsvp-form">
         <p>RSVP</p>
         <br />
         <label htmlFor="name">
-          Your name
           <br />
           <input
             id="name"
@@ -70,12 +69,12 @@ const UserForm: FC<Pick<IUseUserData, "loading" | "user" | "createUser">> = ({
             type="text"
             value={userDetails.name}
             onChange={handleChange}
+            placeholder="Your name"
           />
         </label>
         <br />
 
         <label htmlFor="number">
-          Mobile number
           <br />
           <input
             id="number"
@@ -83,6 +82,7 @@ const UserForm: FC<Pick<IUseUserData, "loading" | "user" | "createUser">> = ({
             type="text"
             value={userDetails.number}
             onChange={handleChange}
+            placeholder="Mobile number"
           />
         </label>
         <br />

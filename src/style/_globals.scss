@@ -1,0 +1,31 @@
+:root {
+  --sm: 8px;
+  --md: 16px;
+  --lg: 32px;
+
+  --green: #bcece0; /* # d5ffd1; */
+  --pink: #f652a0; /* # ffade6; */
+  --light-pink: #fef;
+  --grey: #4c5270; /*  # 707070; */
+  --light-grey: #bebebe;
+  --white: #e0e0e0;
+}
+
+@mixin neuro {
+  background: var(--white);
+  box-shadow: 16px 16px 32px #5a5a5a, -16px -16px 32px #ffffff;
+}
+@mixin neuroRound {
+  background: var(--white);
+  background: linear-gradient(145deg, #f0f0f0, #cacaca);
+  box-shadow: 16px 16px 32px #5a5a5a, -16px -16px 32px #ffffff;
+}
+
+@mixin neuroInset {
+  background: var(--white);
+  box-shadow: inset 12px 12px 16px #5a5a5a, inset -12px -12px 16px #ffffff;
+}
+@mixin neuroOff {
+  background: var(--white);
+  box-shadow: inherit;
+}

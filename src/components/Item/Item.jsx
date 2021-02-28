@@ -1,14 +1,17 @@
 import React from "react";
 import { Dir } from "../../hooks/useUserData";
 import { IItem, IUserVotes } from "../../types";
+import { suffixOf } from "../../utils/suffix-of";
 
 interface ItemProps extends IItem {
+  index: Number;
   userId: string | undefined;
   selected: boolean;
   updateScoreByOne: any;
   userVotes: IUserVotes;
 }
 const Item: React.FC<ItemProps> = ({
+  index,
   updateItemScores,
   score: _score,
   price,
@@ -85,42 +88,42 @@ const Item: React.FC<ItemProps> = ({
   };
 
   return (
-    <div className="item-bg">
-      <a
-        onBlur={() => handleBlur(title)}
-        onClick={(e) => e.preventDefault()}
-        href="#"
-      >
-        <li
-          className="item"
-          style={{
-            backgroundColor: selected ? "var(--light-grey)" : "inherit",
-          }}
+    <span
+      className="item-container"
+      onBlur={() => handleBlur(title)}
+      onClick={(e) => e.preventDefault()}
+      href="#"
+    >
+      <li className="item">
+        <button
+          onClick={handleUpClick}
+          data-amount="2"
+          className={`up-btn ${isUpdActive && "active"}`}
         >
-          <button
-            onClick={handleUpClick}
-            data-amount="2"
-            className={`up-btn ${isUpdActive && "active"}`}
-          >
+          <span>
+            {" "}
             {(isUpdActive ? usersScores.votes.toString() : "") + "+"}
-          </button>
-          <span data-total="6" className="total">
-            {score.total}
           </span>
+        </button>
+        <span className="rank">{suffixOf(index + 1)}</span>
+        <span data-total="6" className="total">
+          {score.total}
+        </span>
 
-          <img src={`https://picsum.photos/id/${35}/300/200`} alt="cat" />
+        <img src={`https://picsum.photos/id/${35}/300/200`} alt="cat" />
+        <div className="details">
           <h3>{title}</h3>
           <p>${price}</p>
-          <button
-            className={`down-btn ${isDownActive && "active"}`}
-            onClick={handleDownClick}
-            data-amount="0"
-          >
-            {usersScores.diss > 0 ? `-${usersScores.diss}` : "-"}
-          </button>
-        </li>
-      </a>
-    </div>
+        </div>
+        <button
+          className={`down-btn ${isDownActive && "active"}`}
+          onClick={handleDownClick}
+          data-amount="0"
+        >
+          <span>{usersScores.diss > 0 ? `-${usersScores.diss}` : "-"}</span>
+        </button>
+      </li>
+    </span>
   );
   return (
     <div className="item-bg">

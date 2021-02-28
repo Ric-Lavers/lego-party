@@ -10,7 +10,7 @@ import { getAllItems, updateItemScore } from "./services/budgetItems";
 import { IItem, IScore, Dir } from "./types";
 import useUserData, { getUserId } from "./hooks/useUserData";
 
-// import "./App.css";
+// import "./style/App.css";
 
 interface UserState {
   votes: number;
@@ -53,7 +53,6 @@ const useItemData = (): IuseitemData => {
       (itm) => ((itm._id as unknown) as Pick<IItem, "_id">) === id
     ) as IItem;
     if (isEqual(item.score, score)) return Promise.resolve();
-    console.log("updating scores", id, score);
     try {
       await updateItemScore(id, score);
       setItems((prev) => {
@@ -106,7 +105,6 @@ function App() {
 
   if (loading || userLoading) return <p>loading...</p>;
   if (error) return <p>error</p>;
-  console.log(user.votes);
 
   return (
     <div className="App">
@@ -126,6 +124,7 @@ function App() {
           {items.map((item, i) => {
             return (
               <Item
+                index={i}
                 updateItemScores={updateItemScores}
                 {...item}
                 userVotes={user.votes}
