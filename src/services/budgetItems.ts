@@ -9,8 +9,6 @@ export const updateItemScore = (
   id: Pick<IItem, "_id">,
   score: Partial<IScore>
 ) => {
-  console.log(id, score);
-
   return Axios.post("update-score", {
     _id: id,
     score,

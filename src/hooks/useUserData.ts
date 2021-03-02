@@ -19,6 +19,7 @@ export interface IUseUserData extends UserData {
 }
 export const getUserId = (): undefined | string =>
   JSON.parse(localStorage?.user || "{}")?._id;
+
 const useUserData = (itemsList: IItem[]): IUseUserData => {
   const userId = getUserId();
   const [{ user, loading, error }, setUser] = useSetState<UserData>({
@@ -32,22 +33,21 @@ const useUserData = (itemsList: IItem[]): IUseUserData => {
         dissd: 0,
       },
     },
-    loading: true,
+    loading: false,
     error: false,
   });
 
   useEffect(() => {
     if (userId) {
-      const fetchUser = async () => {
-        try {
-          const user = await getUser(userId);
-
-          setUser({ user, loading: false });
-        } catch (error) {
-          setUser({ error, loading: false });
-        }
-      };
-      fetchUser();
+      // const fetchUser = async () => {
+      //   try {
+      //     const newUser = await getUser(userId);
+      //     // setUser({ user: { ...user, ...newUser }, loading: false });
+      //   } catch (error) {
+      //     setUser({ error, loading: false });
+      //   }
+      // };
+      // fetchUser();
     } else {
       setUser({ loading: false });
     }
@@ -72,7 +72,6 @@ const useUserData = (itemsList: IItem[]): IUseUserData => {
     console.log("updateScoreByOne", { user, item_id, type, direction });
 
     const index = user.votes.items.findIndex(({ _id }) => _id == item_id);
-    console.log(index);
 
     if (user.votes.upd < 5 && user.votes.dissd < 3) {
       console.log(type, direction);

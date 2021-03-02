@@ -11,13 +11,16 @@ ul {
   list-style-type: none;
   padding-inline-start: 0;
 }
-
+.list-container {
+  display: flex;
+  justify-content: center;
+}
 .list {
   text-align: left;
-  display: grid;
+  display: inline-grid;
+
   grid-template-columns: 1fr 1fr;
   grid-gap: 16px;
-  max-width: 800px;
   justify-content: centre;
   max-width: 600px;
   .item-container {
@@ -51,10 +54,19 @@ ul {
     left: 64px;
   }
 
-  img {
-    width: 100%;
-    // z-index: 2;
+  .img-container {
+    box-shadow: inset 8px 8px 16px #5a5a5a, inset -8px -8px 16px #ffffff;
     margin-bottom: var(--lg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 180px;
+    img {
+      object-fit: cover;
+      object-position: center;
+      max-width: 100%;
+      max-height: 100%;
+      // z-index: 2;
+    }
   }
 
   p,
@@ -83,48 +95,75 @@ ul {
     align-items: center;
     justify-content: center;
     span {
-      z-index: 2;
+      z-index: 3;
     }
 
     @include neuroRound;
     background: linear-gradient(145deg, #f0f0f0, #cacaca);
     box-shadow: 5px 5px 9px #5a5a5a, -5px -5px 9px #ffffff;
     &:active {
-      box-shadow: inset 5px 5px 9px #5a5a5a, inset -5px -5px 9px #ffffff;
-    }
-    &::after {
-      content: "";
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      right: 6px;
-      bottom: 6px;
-      border-radius: 50%;
-      opacity: 0.5;
-      z-index: 1;
-    }
-
-    &.up-btn {
-      // background: var(--green);
-      top: var(--sm);
-      left: var(--sm);
-
-      &::after {
-        background-color: var(--green);
+      // box-shadow: inset 5px 5px 9px #5a5a5a, inset -5px -5px 9px #ffffff;
+      .square {
+        z-index: 1;
+        // display: block;
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        top: 24px;
+        left: 24px;
+        // background-color: transparent;
+        border-radius: 0 0 24px 0;
+        box-shadow: inset 8px 8px 16px #5a5a5a,
+          inset -8px -8px 16px var(--white);
+      }
+      &.up-btn {
+        &::after {
+          // background: linear-gradient(145deg, #5a5a5a, var(--green), #f0f0f0);
+          background: linear-gradient(145deg, #f0f0f0, var(--green));
+          box-shadow: inset 5px 5px 9px #5a5a5a, inset -5px -5px 9px #ffffff;
+        }
+      }
+      &.down-btn {
+        &::after {
+          background: linear-gradient(145deg, var(--pink), #f0f0f0);
+          box-shadow: inset 4px 4px 6px #5a5a5a, inset -4px -4px 6px #ffffff;
+        }
       }
     }
+    &.up-btn {
+      top: 8px;
+      left: 8px;
 
-    &.down-btn {
-      // background: var(--pink);
-      position: absolute;
-      bottom: var(--sm);
-      right: var(--sm);
       &::after {
-        background-color: var(--pink);
+        // background-color: var(--green);
+        background: linear-gradient(145deg, var(--green), #f0f0f0);
+      }
+    }
+    &.down-btn {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      &::after {
+        // background-color: var(--pink);
+        background: linear-gradient(145deg, #f0f0f0, var(--pink));
       }
       span {
         padding: 0px 0 2px 0;
       }
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      right: 4px;
+      bottom: 4px;
+      border-radius: 50%;
+      opacity: 1;
+      z-index: 2;
+    }
+    .square {
+      display: none;
     }
   }
   .details {
@@ -137,6 +176,14 @@ ul {
 @media screen and (max-width: 600px) {
   .list {
     grid-template-columns: 1fr;
+    .item button::after {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+    }
     .item {
       .rank {
         display: block;
@@ -148,20 +195,33 @@ ul {
 
         box-shadow: 8px 8px 16px #5a5a5a, -8px -8px 16px #ffffff;
         &:active {
-          box-shadow: inset 8px 8px 16px #5a5a5a, inset -8px -8px 16px #ffffff;
+          box-shadow: inset 4px 6px 16px #5a5a5a, inset -8px -8px 16px #ffffff;
         }
+
         &.down-btn {
           box-shadow: 8px 8px 16px #5a5a5a, -2px -2px 16px #ffffff;
           &:active {
             box-shadow: inset 4px 6px 16px #5a5a5a, inset -8px -8px 16px #ffffff;
           }
-          /* ,
-            -4px -4px 4px #ffffff; */
+        }
+        &.up-btn {
+          box-shadow: 8px 8px 16px #5a5a5a, -8px -8px 16px #ffffff;
+          &:active {
+            .square {
+              // display: block;
+              width: 56px;
+              height: 56px;
+              top: 24px;
+              left: 24px;
+              border-radius: 0 0 40px 0;
+            }
+          }
         }
       }
     }
   }
 }
+
 @media screen and (min-width: 600px) {
   .item p,
   .item h3 {

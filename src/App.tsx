@@ -9,8 +9,7 @@ import { sortByBudget } from "./utils/sort-with-budget";
 import { getAllItems, updateItemScore } from "./services/budgetItems";
 import { IItem, IScore, Dir } from "./types";
 import useUserData, { getUserId } from "./hooks/useUserData";
-
-// import "./style/App.css";
+import useScrollHide from "./hooks/useScrollHide";
 
 interface UserState {
   votes: number;
@@ -86,13 +85,8 @@ const useItemData = (): IuseitemData => {
 };
 
 function App() {
-  const {
-    items: itemsList,
-    loading,
-    error,
-    updateItemScores,
-    // updateScoreByOne,
-  } = useItemData();
+  const show = useScrollHide();
+  const { items: itemsList, loading, error, updateItemScores } = useItemData();
   const {
     loading: userLoading,
     createUser,
@@ -100,45 +94,55 @@ function App() {
     user,
     updateScoreByOne,
   } = useUserData(itemsList);
-  console.log(itemsList);
 
   const { items, budget } = sortByBudget(itemsList, 420);
 
-  console.log({ items });
   if (loading || userLoading) return <p>loading...</p>;
   if (error) return <p>error</p>;
+  // console.log(user?.votes);
 
   return (
     <div className="App">
-      <UserForm loading={userLoading} user={user} createUser={createUser} />
-      <h3>The Party has </h3>
-      <h1>$420 to spend.</h1>
       <section>
-        {userId && (
-          <div className="vote-info sticky">
-            <h3>You have</h3>
-            <h2>{5 - user.votes.upd} votes remaining</h2>
-            <h2>{3 - user.votes.dissd} diss' remaining</h2>
-          </div>
-        )}
+        <header>
+          <UserForm loading={userLoading} user={user} createUser={createUser} />
 
-        <ul className="list">
-          {items.map((item, i) => {
-            return (
-              <Item
-                index={i}
-                updateItemScores={updateItemScores}
-                {...item}
-                userVotes={user.votes}
-                updateScoreByOne={updateScoreByOne}
-                userId={userId}
-              />
-            );
-          })}
-        </ul>
+          <h3>The Party has </h3>
+          <h1>$420 to spend.</h1>
+        </header>
+        <div className={`sticky ${show}`}>
+          {user?.votes && (
+            <div className="flex-center">
+              <div className="vote-info">
+                <h3>You have</h3>
+                <h2>{5 - user.votes?.upd} votes remaining</h2>
+                <h2>{3 - user.votes?.dissd} diss' remaining</h2>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="list-container">
+          <ul className="list">
+            {items.map((item, i) => {
+              return (
+                <Item
+                  index={i}
+                  updateItemScores={updateItemScores}
+                  {...item}
+                  userVotes={user?.votes}
+                  updateScoreByOne={updateScoreByOne}
+                  userId={userId}
+                />
+              );
+            })}
+          </ul>
+        </div>
       </section>
-      <h3>The Party has </h3>
-      <h1>${budget} remaining.</h1>
+      <section className="section">
+        <h3>The Party has </h3>
+        <h1>${budget} remaining.</h1>
+      </section>
     </div>
   );
 }

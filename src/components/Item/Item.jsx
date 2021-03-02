@@ -27,22 +27,9 @@ const Item: React.FC<ItemProps> = ({
   ...rest
 }: any) => {
   const [score, setScore] = React.useState(_score);
-  // const [itemBGClass, setItemClass] = React.useState("item-bg");
-  // const [item] = useItemContext(intialState);
-
-  // const { id, down, up, score, price, title } = item;
-  // const usersScores = React.useMemo(
-  //   () => ({
-  //     upd: score.upd.reduce((a, str) => (str === userId ? ++a : a), 0),
-  //     dissd: score.dissd.reduce((a, str) => (str === userId ? ++a : a), 0),
-  //   }),
-  //   [score, userId]
-  // );
 
   const isUpdActive = usersScores.votes > 0;
   const isDownActive = usersScores.diss > 0;
-  // console.log(score);
-  // console.log(usersScores);
 
   // const handlePointerEnter = () => setItemClass("item-bg selected");
   // const handlePointerLeave = () => setItemClass("item-bg");
@@ -50,7 +37,7 @@ const Item: React.FC<ItemProps> = ({
   const handleUpClick = (e) => {
     updateScoreByOne(_id, Dir.UP, 1);
     return;
-    if (usersScores.votes < 5 || isDownActive) {
+    if (usersScores.votes < 5) {
       setScore((prev) => {
         if (isDownActive) {
           const index = prev.dissd.indexOf(userId);
@@ -106,16 +93,20 @@ const Item: React.FC<ItemProps> = ({
             {" "}
             {(isUpdActive ? usersScores.votes.toString() : "") + "+"}
           </span>
+          {<div className="square" />}
         </button>
         <span className="rank">{suffixOf(index + 1)}</span>
         <span data-total="6" className="total">
           {score.total}
         </span>
-
-        <img
-          src={img?.src || `https://picsum.photos/id/${35}/300/200`}
-          alt="cat"
-        />
+        <div
+          className="img-container"
+          style={{
+            backgroundImage: `url(${
+              img?.src || `https://picsum.photos/id/${35}/300/200`
+            })`,
+          }}
+        ></div>
         <div className="details">
           <h3>{title}</h3>
           <p>${price}</p>
